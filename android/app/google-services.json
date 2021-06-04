@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "486195697804",
+    "firebase_url": "https://wisp-221f6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "wisp-221f6",
+    "storage_bucket": "wisp-221f6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486195697804:android:5e037a6c9cfd87b70dc3a9",
+        "android_client_info": {
+          "package_name": "com.example.wisp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486195697804-0ifnrtucioa2tja4k7ftu2pu21hmog99.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzswHqBylTGTtqlE74QaPlvbzspuK8YGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "486195697804-0ifnrtucioa2tja4k7ftu2pu21hmog99.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
