@@ -17,7 +17,7 @@ class _SignUpState extends State<SignUp> {
   checkAuthentication() async {
     _auth.onAuthStateChanged.listen((user) async {
       if (user != null) {
-        Navigator.pushReplacementNamed(context, "/");
+
       }
     });
   }
@@ -87,17 +87,21 @@ class _SignUpState extends State<SignUp> {
                   padding: EdgeInsets.only(left:10),
                   child: Align(
                     alignment: Alignment.topLeft,
-                        child: RaisedButton(
-                            padding: EdgeInsets.only(top: 10,bottom: 10),
-                            onPressed:  navigateToNextPage,
-                            child: Image(
-                              image: AssetImage("lib/images/left-arrow.png"),
-                              fit: BoxFit.contain,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50.50),
-                            ),
-                            color: Color(0xFFEBEAEC)),
+                    child: RaisedButton(
+                        padding: EdgeInsets.only(top: 10,bottom: 10),
+                        onPressed:  navigateToNextPage,
+                        child: RichText(
+                            text: TextSpan(
+                              text: 'BACK',
+                              style: TextStyle(
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black),
+                            )),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.50),
+                        ),
+                        color: Color(0xFFEBEAEC)),
                 ),
               ),
                 Container(

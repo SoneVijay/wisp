@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:wisp/Parent/list.dart';
 
-import '../Start.dart';
 
-
-class SignUp extends StatefulWidget {
+class AddChild extends StatefulWidget {
   @override
-  _SignUpState createState() => _SignUpState();
+  _AddChildState createState() => _AddChildState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _AddChildState extends State<AddChild> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   CollectionReference firestore_users = Firestore.instance.collection("user");
-  String user_email, _password, parent_id;
+  String user_firstName, user_lastName,user_email, _password, parent_id;
 
 
   checkAuthentication() async {
     _auth.onAuthStateChanged.listen((user) async {
       if (user != null) {
-        Navigator.pushReplacementNamed(context, "/");
+        var firebaseUser = await FirebaseAuth.instance.currentUser();
+        Firestore.instance.collection('user').document(firebaseUser.uid).get().then((DocumentSnapshot) =>
+        parent_id = firebaseUser.uid);
+        print("parent id: "+parent_id);
       }
     });
   }
@@ -30,12 +32,11 @@ class _SignUpState extends State<SignUp> {
     super.initState();
     this.checkAuthentication();
   }
-
+  void navigateToNextScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>childrenList()));
+  }
   signUp() async {
-    var firebaseUser = await FirebaseAuth.instance.currentUser();
-    Firestore.instance.collection('user').document(firebaseUser.uid).get().then((DocumentSnapshot) =>
-    parent_id = firebaseUser.uid);
-    print(parent_id);
+
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
@@ -44,7 +45,8 @@ class _SignUpState extends State<SignUp> {
             email: user_email.trim(), password: _password);
 
         if (user != null) {
-          await firestore_users.document(user.user.uid).setData({"user_email": user_email,  "user_role": "child", "parent_id": parent_id});
+          await firestore_users.document(user.user.uid).setData({"user_email": user_email, "user_firstName":user_firstName, "user_lastName":user_lastName, "user_role": "child", "parent_id": parent_id});
+          navigateToNextScreen(context);
         }
       } catch (e) {
         showError(e.message);
@@ -78,7 +80,7 @@ class _SignUpState extends State<SignUp> {
   //navigate
   navigateToNextPage() async {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Start()));
+        context, MaterialPageRoute(builder: (context) => childrenList()));
   }
   @override
   Widget build(BuildContext context) {
@@ -99,10 +101,10 @@ class _SignUpState extends State<SignUp> {
                         onPressed:  navigateToNextPage,
                         child: RichText(
                             text: TextSpan(
-                              text: '<-',
+                              text: 'BACK',
                               style: TextStyle(
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.w800,
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.w300,
                                   color: Colors.black),
                             )),
                         shape: RoundedRectangleBorder(
@@ -115,15 +117,36 @@ class _SignUpState extends State<SignUp> {
                   height: 50,
                   child: RichText(
                       text: TextSpan(
-                        text: 'Add Child!',
+                        text: 'ADD A CHILD',
                         style: TextStyle(
                             fontSize: 25.0,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w500,
                             color: Colors.black),
                       )),),
 
                 Container(
                   height: 30,
+                ),
+                Container(
+                  child: TextFormField(
+                      validator: (input) {
+                        if (input.isEmpty) return 'Enter First Name';
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'First Name',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      onSaved: (input) => user_firstName = input),
+                ),Container(
+                  child: TextFormField(
+                      validator: (input) {
+                        if (input.isEmpty) return 'Enter Last Name';
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Last Name',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      onSaved: (input) => user_lastName = input),
                 ),
                 Container(
                   child: Form(

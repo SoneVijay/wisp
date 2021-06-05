@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'childrenList.dart';
+import 'constant.dart';
+
 
 
 class ParentHome extends StatefulWidget {
@@ -13,7 +17,6 @@ class _ParentHomeState extends State<ParentHome> {
   //ignore: non_constant_identifier_names
   CollectionReference firestore_users = Firestore.instance.collection("user");
   bool isloggedin = true;
-  var userrole;
 
   checkAuthentification() async {
     _auth.onAuthStateChanged.listen((user) {
@@ -22,8 +25,6 @@ class _ParentHomeState extends State<ParentHome> {
       }
     });
   }
-
-
 
   signOut() async {
     _auth.signOut();
@@ -41,56 +42,76 @@ class _ParentHomeState extends State<ParentHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         body: Container(
-          child: !isloggedin
-              ? CircularProgressIndicator()
-              : Column(
-            children: <Widget>[
-              SizedBox(height: 40.0),
-              Container(
-                height: 300,
-                child: Image(
-                  image: AssetImage("images/ParentHome.png"),
-                  fit: BoxFit.contain,
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  child: Align( alignment: Alignment.topLeft,
+                    child: logoutButton((){}),
+                  ),
                 ),
               ),
-
-              Container(
-                child: Text(
-                  "Parent",
-                  style:
-                  TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    children: [
+                      childrenButton((){
+                        Get.to(childrenScreen());
+                      }),
+                    ],
+                  ),
                 ),
               ),
-              RaisedButton(
-                padding: EdgeInsets.fromLTRB(70, 10, 70, 10),
-                onPressed: signOut,
-                child: Text('Signout',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold)),
-                color: Color(0xFF8E97FD),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-              RaisedButton(
-                padding: EdgeInsets.fromLTRB(70, 10, 70, 10),
-                onPressed: childList,
-                child: Text('Children',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold)),
-                color: Color(0xFF8E97FD),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              )
             ],
           ),
-        ));
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/images/p1.png'),fit: BoxFit.cover,
+              )
+          ),
+        ),
+      ),
+    );
   }
+  Widget logoutButton( Function function){
+    return Padding(
+      padding: const EdgeInsets.only(top: 25,right: 16),
+      child: Row( mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton(onPressed:signOut,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text('LOGOUT',style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600),),
+            ),
+            style: ElevatedButton.styleFrom(
+              primary: primaryColor.withOpacity(0.9),
+              onPrimary: secondaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget childrenButton(Function function){
+    return GestureDetector( onTap:childList,
+      child: Container( margin: EdgeInsets.only(top: 120,right: 25,left: 25),
+        height: 57,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: primaryColor.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(40),
+        ),
+        child: Center(child: Text('CHILDREN',style: TextStyle(fontWeight: FontWeight.w600),)),
+      ),
+    );
+  }
+
 }

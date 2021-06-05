@@ -15,11 +15,29 @@ class _LoginState extends State<Login> {
   String _email, _password, user_role;
 
   checkAuthentification() async {
+    print('function initialized');
     _auth.onAuthStateChanged.listen((user) {
+      print('authStateChanged...');
       if (user != null) {
         print(user);
+        // please remove this, kay wala ka sang route nga may "/" ang ngalan
+        // ang ngalan sang routes sa app mo ang Home, Login, Sign up, ParentHome, ChildHome, AddChild
+        // wala sang "/"
 
-        Navigator.pushReplacementNamed(context, "/");
+        // Navigator.pushReplacementNamed(context, "/");
+        // amo ni ang sakto nga paghandle sang then() kay async function na ang pagkuha sang data
+        // the then() will trigger after nga makuha sang app ang data
+        Firestore.instance.collection('user').document(user.uid).get().then((snapshot) {
+          user_role = snapshot.data['user_role'];
+          print('user role ' +user_role);
+          if(user_role == "parent"){
+            Navigator.pushReplacementNamed(context, "ParentHome");
+          }
+          else{
+            Navigator.pushReplacementNamed(context, "ChildHome");
+          }
+        });
+
       }
     });
   }
@@ -38,17 +56,27 @@ class _LoginState extends State<Login> {
       try {
         await _auth.signInWithEmailAndPassword(
             email: _email.trim(), password: _password);
-        var firebaseUser = await FirebaseAuth.instance.currentUser();
-        Firestore.instance.collection('user').document(firebaseUser.uid).get().then((DocumentSnapshot) =>
-            user_role = DocumentSnapshot.data['user_role']);
-        print(firebaseUser.uid);
-        print(user_role);
-        if(user_role == "parent"){
-          Navigator.pushReplacementNamed(context, "ParentHome");
-        }
-        else{
-          Navigator.pushReplacementNamed(context, "ChildHome");
-        }
+
+        // 1: Nag doble imo nga pag check sang authentication
+        // stick ka na lang sa checkAuthentication function
+        // as that will automatically trigger once may changes sa authentication
+        // logged in/out
+
+        // 2: sala imo pag declare sang then(); dapat isulod mo dira ang pagnavigate
+        // sa next page, kay inside the then statement dira mo maaccess ang user data from firestore
+
+        // dont use this, transferred on the checkAuth function
+        // var firebaseUser = await FirebaseAuth.instance.currentUser();
+        // Firestore.instance.collection('user').document(firebaseUser.uid).get().then((DocumentSnapshot) =>
+        //     user_role = DocumentSnapshot.data['user_role']);
+        // print(firebaseUser.uid);
+        // print('user role ' +user_role);
+        // if(user_role == "parent"){
+        //   Navigator.pushReplacementNamed(context, "ParentHome");
+        // }
+        // else{
+        //   Navigator.pushReplacementNamed(context, "ChildHome");
+        // }
 
       } catch (e) {
         showError(e.message);
@@ -87,11 +115,11 @@ class _LoginState extends State<Login> {
           child: Container(
             child: Column(
               children: <Widget>[
-              Container(
-              height: 60,
-              ),
                 Container(
-                height: 60,
+                  height: 60,
+                ),
+                Container(
+                  height: 60,
                   child: RichText(
                       text: TextSpan(
                         text: 'Welcome Again!',
@@ -102,7 +130,7 @@ class _LoginState extends State<Login> {
                       )),),
 
                 Container(
-                  height: 400,
+                  height: 300,
                   child: Image(
                     image: AssetImage("lib/images/WhiteWisp.png"),
                     fit: BoxFit.contain,
@@ -158,9 +186,9 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-            Container(
-              height: 20,
-            ),
+                Container(
+                  height: 20,
+                ),
                 GestureDetector(
                   child: Text('Create an Account?'),
                   onTap: navigateToSignUp,

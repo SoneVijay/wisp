@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wisp/Child/ChildHome.dart';
 import 'package:wisp/Parent/ParentHome.dart';
+import 'package:wisp/Parent/list.dart';
+import 'package:wisp/Parent/AddChild.dart';
 import 'Login.dart';
 import 'SignUp.dart';
 import 'Start.dart';
@@ -34,7 +36,9 @@ class MyApp extends StatelessWidget {
         'SignUp': (context) => SignUp(),
         'ParentHome': (context) => ParentHome(),
         'ChildHome': (context) => ChildHome(),
-        'AddChild': (context) => ParentHome(),
+        'ChildList': (context) => childrenList(),
+        'AddChild': (context) => AddChild(),
+
 
       },
 
