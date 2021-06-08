@@ -13,7 +13,6 @@ class _ChildHomeState extends State<ChildHome> {
   //ignore: non_constant_identifier_names
   CollectionReference firestore_users = Firestore.instance.collection("user");
   bool isloggedin = true;
-  var userrole;
 
   checkAuthentification() async {
     _auth.onAuthStateChanged.listen((user) {
@@ -52,7 +51,7 @@ class _ChildHomeState extends State<ChildHome> {
               Container(
                 height: 300,
                 child: Image(
-                  image: AssetImage("images/white.png"),
+                  image: AssetImage("images/wisp_6.png"),
                   fit: BoxFit.contain,
                 ),
               ),

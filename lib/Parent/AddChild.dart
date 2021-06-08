@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:wisp/Parent/list.dart';
+import 'Model/childrenList.dart';
+import 'Widget/childrenWidget.dart';
 
 
 class AddChild extends StatefulWidget {
@@ -181,7 +184,148 @@ class _AddChildState extends State<AddChild> {
                         Container(
                           height: 20,
                         ),
+
+                        //List of Wisps
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 20.0),
+                          height: 150.0,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: <Widget>[
+                              Container(
+                                width: 10.0,
+                              ),
+                            InkWell(
+                              child: Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                  width: 150.0,
+                                  color: Colors.blue.withOpacity(0.5),
+                                  child: Container(
+                                      decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                          image: ExactAssetImage('lib/images/wisp_6.png'),
+                                          scale: 8,
+
+                                        ),
+                                      )
+                                  )
+                              ),
+                              onTap: () {
+
+                              },
+                            ),
+
+                              Container(
+                                width: 10.0,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                  width: 150.0,
+                                  color: Colors.green.withOpacity(0.5),
+                                  child: Container(
+
+                                      decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                          image: ExactAssetImage('lib/images/wisp_2.png'),
+                                          scale: 10,
+                                        ),
+                                      )
+                                  )
+                              ),
+                              Container(
+                                width: 10.0,
+                              ),
+                              Container(
+
+                                  padding: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                  width: 150.0,
+                                  color: Colors.lightBlueAccent.withOpacity(0.5),
+                                  child: Container(
+                                      decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                          image: ExactAssetImage('lib/images/wisp_1.png'),
+                                          scale: 10,
+                                        ),
+                                      )
+                                  )
+                              ),
+                              Container(
+                                width: 10.0,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                  width: 150.0,
+                                  color: Colors.yellow.withOpacity(0.5),
+                                  child: Container(
+                                      decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                          image: ExactAssetImage('lib/images/wisp_7.png'),
+                                          scale: 2,
+                                        ),
+                                      )
+                                  )
+                              ),
+                              Container(
+                                width: 10.0,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                  width: 150.0,
+                                  color: Colors.orangeAccent.withOpacity(0.5),
+                                  child: Container(
+                                      decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                          image: ExactAssetImage('lib/images/wisp_5.png'),
+                                          scale: 2,
+                                        ),
+                                      )
+                                  )
+                              ),
+                              Container(
+                                width: 10.0,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                  width: 150.0,
+                                  color: Colors.pinkAccent.withOpacity(0.5),
+                                  child: Container(
+                                      decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                          image: ExactAssetImage('lib/images/wisp_4.png'),
+                                          scale: 2,
+                                        ),
+                                      )
+                                  )
+                              ),
+                              Container(
+                                width: 10.0,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                  width: 150.0,
+                                  color: Colors.deepOrange.withOpacity(0.5),
+                                  child: Container(
+                                      decoration: new BoxDecoration(
+                                        image: new DecorationImage(
+                                          image: ExactAssetImage('lib/images/wisp_3.png'),
+                                          scale: 2,
+                                        ),
+                                      )
+                                  )
+                              ),
+                              Container(
+                                width: 10.0,
+                              ),
+                            ],
+                          ),
+                        ),
+
+
+                        Container(
+                          height: 20,
+                        ),
                         SizedBox(height: 20),
+
                         RaisedButton(
                             padding: EdgeInsets.only(left: 120, right: 120,bottom: 18,top: 18),
                             onPressed: signUp,

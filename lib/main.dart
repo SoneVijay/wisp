@@ -12,6 +12,7 @@ import 'Start.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MyApp());
 
 }
