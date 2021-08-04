@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'SignUp.dart';
+import 'package:rive/rive.dart';
+
 
 class Start extends StatefulWidget {
   @override
@@ -8,7 +9,6 @@ class Start extends StatefulWidget {
 }
 
 class _StartState extends State<Start> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   navigateToLogin() async {
     Navigator.pushReplacementNamed(context, "Login");
@@ -17,15 +17,22 @@ class _StartState extends State<Start> {
   navigateToSignUp() async {
     Navigator.pushReplacementNamed(context, "SignUp");
   }
+
+  Widget pet (Function function){
+    return Scaffold(
+      body: Center(
+        child: RiveAnimation.asset(
+          'lib/images/WhiteWisp.riv',
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("lib/images/BgIndex.png"),
-          fit: BoxFit.contain,
-          ),
         ),
         child: Column(
           children: <Widget>[
@@ -48,19 +55,14 @@ class _StartState extends State<Start> {
                       fontSize: 20.0,
                       color: Colors.black),
                 )),
-            SizedBox(height: 20.0),
-            SizedBox(height: 35.0),
-            Container(
-              height: 280,
-              child: Image(
-                image: AssetImage("lib/images/wisp_6.png"),
-                fit: BoxFit.contain,
-              ),
+            SizedBox(
+              height:50,),
+            SizedBox(
+              height:400,
+              child: pet((){}),
             ),
-
-
-            SizedBox(height: 100.0),
-            SizedBox(height: 30.0),
+        SizedBox(
+          height:50,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

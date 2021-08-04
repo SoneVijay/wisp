@@ -17,7 +17,7 @@ class _SignUpState extends State<SignUp> {
   checkAuthentication() async {
     _auth.onAuthStateChanged.listen((user) async {
       if (user != null) {
-
+        Navigator.pushReplacementNamed(context, "ParentHome");
       }
     });
   }
@@ -52,12 +52,7 @@ class _SignUpState extends State<SignUp> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('ERROR'),
-            content: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(errormessage),
-              ),
-            ),
+            content: Text(errormessage),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
