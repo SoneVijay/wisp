@@ -7,30 +7,39 @@ class AddTask extends StatefulWidget {
   @override
   _AddTaskState createState() => _AddTaskState();
 }
-
 class _AddTaskState extends State<AddTask> {
+  var selectedChild, user_id;
   FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   CollectionReference firestore_users = Firestore.instance.collection("user");
   CollectionReference firestore_task = Firestore.instance.collection("TASK");
-  String taskName, taskExp, childId, taskDetails, user_id;
+  String taskName, taskExp, childId, taskDetails;
   DateTime _date = DateTime.now();
 
   addTask() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      try {
+        if((childId != null || taskName != null) || (taskDetails != null || taskExp != null)) {
+          _buildPopupDialog();
+          await firestore_task.document().setData({
+            "child_id": childId,
+            "task_name": taskName,
+            "task_details": taskDetails,
+            "task_date": _date,
+            "task_experience": taskExp,
+          });
 
-      await firestore_task.document().setData({
-        "child_id": childId,
-        "task_name": taskName,
-        "task_details": taskDetails,
-        "task_date": _date,
-        "task_experience": taskExp,
-      });
+        }
+      }
+      catch (e) {
+        showError(e.message);
+        print(e);
+      }
     }
   }
 
-  Widget _buildPopupDialog(BuildContext context) {
+   _buildPopupDialog() {
     return new AlertDialog(
       content: new Column(
         mainAxisSize: MainAxisSize.min,
@@ -69,6 +78,11 @@ class _AddTaskState extends State<AddTask> {
         });
   }
 
+  int _selectedIndex = 0;
+  _onSelected(int index) {
+    setState(() => _selectedIndex = index);
+  }
+
   Future getChild() async {
     FirebaseUser user = await _auth.currentUser();
     user_id = user.uid;
@@ -76,33 +90,6 @@ class _AddTaskState extends State<AddTask> {
     QuerySnapshot qn =
     await firestore.collection('user').where('parent_id', isEqualTo: user_id).getDocuments();
     return qn.documents;
-  }
-
-
-  List _fruits = ["Choose a Child","Apple", "Banana", "Pineapple", "Mango", "Grapes"];
-
-  List<DropdownMenuItem<String>> _dropDownMenuItems;
-  String _selectedFruit;
-
-  @override
-  void initState() {
-  _dropDownMenuItems = buildAndGetDropDownMenuItems(_fruits);
-  _selectedFruit = _dropDownMenuItems[0].value;
-  super.initState();
-  }
-
-  List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List fruits) {
-  List<DropdownMenuItem<String>> items = new List();
-  for (String fruit in fruits) {
-  items.add(new DropdownMenuItem(value: fruit, child: new Text(fruit)));
-  }
-  return items;
-  }
-
-  void changedDropDownItem(String selectedFruit) {
-  setState(() {
-  _selectedFruit = selectedFruit;
-  });
   }
 
   @override
@@ -138,20 +125,65 @@ class _AddTaskState extends State<AddTask> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              DropdownButton(
-                                value: _selectedFruit,
-                                items: _dropDownMenuItems,
-                                onChanged: changedDropDownItem,
-                              )
-                            ],
-                          ),
-                        ),
+                        FutureBuilder(
+                            future: getChild(),
+                            builder: (_, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Center(
+                                  child: Text("Loading..."),
+                                );
+                              } else {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(vertical: 20.0),
+                                  height: 125.0,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:  snapshot.data != null ? snapshot.data.length : 0,
+                                    itemBuilder: (_, index) {
+                                      return InkWell(
+                                          child: Container(
+                                            padding: EdgeInsets.only(
+                                            left: 10, right: 10, top: 10),
+                                            width: 125.0,
+                                            color: _selectedIndex != null && _selectedIndex == index
+                                                ? Colors.blue.withOpacity(0.5)
+                                                : Colors.white,
+                                              child: Column(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      padding: EdgeInsets.only(
+                                                          left: 50, right: 50, top: 80),
+                                                      decoration: new BoxDecoration(
+                                                        image: new DecorationImage(
+                                                          image: ExactAssetImage("lib/images/" + snapshot.data[index].data["wisp"] + '.png'),
+                                                          scale: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                  snapshot.data[index].data["user_firstName"],
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 15.0,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: Colors.black),
+                                                ),
 
+                                              ]),
+                                          ),
+                                        onTap: (){
+                                          childId = (snapshot.data[index].documentID);
+                                          print(childId);
+                                          _onSelected(index);
+                                        },
+                                      );
+                                    }),
+                              );
+                              }
+                            }),
                         Container(
                           child: TextFormField(
                               validator: (input) {
@@ -162,7 +194,6 @@ class _AddTaskState extends State<AddTask> {
                                 prefixIcon: Icon(Icons.addchart_outlined),
                               ),
                               onSaved: (input) => taskName = input),
-
                         ),
                         Container(
                           child: TextFormField(
@@ -174,7 +205,6 @@ class _AddTaskState extends State<AddTask> {
                                 prefixIcon: Icon(Icons.addchart_outlined),
                               ),
                               onSaved: (input) => taskDetails = input),
-
                         ),
                         Container(
                           child: TextFormField(
@@ -186,7 +216,6 @@ class _AddTaskState extends State<AddTask> {
                                 prefixIcon: Icon(Icons.addchart_outlined),
                               ),
                               onSaved: (input) => taskExp = input),
-
                         ),
 
                         Container(
@@ -200,13 +229,7 @@ class _AddTaskState extends State<AddTask> {
                             padding: EdgeInsets.only(
                                 left: 120, right: 120, bottom: 18, top: 18),
                             onPressed: (){
-                              if((taskDetails != null && taskName != null) && (taskExp!= null && childId != null)){
-                                addTask();
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) => _buildPopupDialog(context),
-                                );
-                              }
+                              addTask();
                             },
                             child: Text(
                               'ADD',

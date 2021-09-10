@@ -49,7 +49,7 @@ class _StartState extends State<Start> {
             SizedBox(height: 5),
             RichText(
                 text: TextSpan(
-                  text: 'An Anti-Lazy Application',
+                  text: 'An Assistive Application',
                   style: TextStyle(
                     fontFamily: "Roboto",
                       fontSize: 20.0,

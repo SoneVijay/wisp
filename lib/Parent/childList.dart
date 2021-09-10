@@ -9,11 +9,9 @@ class childList extends StatefulWidget {
 class _childListState extends State<childList> {
   Future getChild() async {
     var firestore = Firestore.instance;
-
     QuerySnapshot qn =
         await firestore.collection("user").getDocuments(); //get all documents
-
-    return qn.documents; //returns all documents
+        return qn.documents; //returns all documents
   }
 
   @override

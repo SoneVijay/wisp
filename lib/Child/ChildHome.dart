@@ -1,9 +1,11 @@
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:wisp/Parent/constant.dart';
 import 'package:rive/rive.dart';
-
 
 class ChildHome extends StatefulWidget {
   @override
@@ -15,7 +17,10 @@ class _ChildHomeState extends State<ChildHome> {
   //ignore: non_constant_identifier_names
   CollectionReference firestore_users = Firestore.instance.collection("user");
   bool isloggedin = true;
-  String firstName = "", wisp = "",user_id;
+  String firstName = "", wisp = "", user_id;
+  int exp, max=100;
+  double finalExp;
+
 
   checkAuthentification() async {
     _auth.onAuthStateChanged.listen((user) {
@@ -35,7 +40,7 @@ class _ChildHomeState extends State<ChildHome> {
     super.initState();
     this.checkAuthentification();
   }
-  Future getTask()async{
+getTask()async{
     FirebaseUser user = await _auth.currentUser();
     user_id = user.uid;
     Firestore.instance
@@ -44,13 +49,23 @@ class _ChildHomeState extends State<ChildHome> {
         .get()
         .then((snapshot) {
       wisp = snapshot.data['wisp'].toString();});
+    Firestore.instance
+        .collection('PET')
+        .document(user_id)
+        .get()
+        .then((snapshot) {
+      exp = snapshot.data['pet_experience'];});
+    finalExp = exp/100;
+    print("exp:" + finalExp.toString());
     print("user id:" + user_id);
     print("user wisp:" + wisp);
+    print("pet_experience:" + exp.toString());
+
     var firestore = Firestore.instance;
     QuerySnapshot qn =
     await firestore.collection('TASK').where('child_id', isEqualTo: user_id).getDocuments();
     return qn.documents;
-  }
+}
 
   Future deletetask(String taskId) async {
     try {
@@ -89,72 +104,101 @@ class _ChildHomeState extends State<ChildHome> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Container(
+          height: deviceHeight,
+          width: deviceWidth,
           child: !isloggedin
               ? CircularProgressIndicator()
               : Column(
             children: <Widget>[
-              SizedBox(height: 20.0),
+              SizedBox(height: deviceHeight * 0.03),
             Container(
               child: Align( alignment: Alignment.topLeft,
               child: logoutButton((){}),
               ),
             ),
-              SizedBox(
-                height: 350,
-                child: RiveAnimation.asset('lib/images/wisp_6.riv'),
-              ),
               Container(
-                  height: 420.0,
-                  width: 350.0,
-                  color: Colors.white.withOpacity(0.5),
-                  child: Column(
-                      children: <Widget>[
-                        Container(
-                          height:415.0,
                           child: FutureBuilder(
                               future: getTask(),
                               builder: (_, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                if (snapshot.connectionState == ConnectionState.waiting ) {
                                   return Center(
                                     child: Text("Loading..."),);
                                 } else {
-                                  return ListView.builder(
-
-                                      itemCount:  snapshot.data != null ? snapshot.data.length : 0,
-                                      itemBuilder: (_, index) {
-                                        return Dismissible(
-                                          key: Key(UniqueKey().toString()),
-                                          onDismissed: (direction) async {
-                                            deletetask(snapshot.data[index].reference.documentID);
-                                          },
-                                          child: ListTile(
-                                            title:
-                                            Text(snapshot.data[index].data["task_name"]),
-                                            subtitle: Text("${snapshot.data[index].data["task_details"]} ${snapshot.data[index].data["task_experience".toString()]}" + " Exp"),
-                                          ),
-                                          background: Container(
-                                            alignment: Alignment.centerLeft,
-                                            padding: EdgeInsets.only(left: 20.0),
-                                            color: Colors.red,
-                                            child: Icon(
-                                              Icons.delete_forever_sharp,
-                                              color: Colors.white,
+                                  return Container(
+                                      child: Column(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: deviceHeight * 0.35,
+                                              child: RiveAnimation.asset('lib/images/pet_4.riv'),
                                             ),
-                                          ),
-                                        );
-                                      });
+                                            Padding(
+                                              padding: EdgeInsets.only(left: deviceWidth * 0.1, right: deviceWidth * 0.1, top: deviceHeight * 0.01,bottom: deviceHeight * 0.01,),
+                                              child: new LinearPercentIndicator(
+                                                width: deviceWidth * 0.80,
+                                                lineHeight: deviceHeight * 0.02,
+                                                percent: finalExp,
+                                                center: Text(
+                                                  exp.toString(),
+                                                  style: new TextStyle(fontSize: 12.0),
+                                                ),
+                                                linearStrokeCap: LinearStrokeCap.roundAll,
+                                                backgroundColor: Colors.grey,
+                                                progressColor: Colors.blue,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(7.0),
+                                              child: new Text(
+                                                'LEVEL 1',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Container(
+                                                height: deviceHeight * 0.40,
+                                                width: deviceWidth * 0.80,
+                                                color: Colors.white.withOpacity(0.5),
+                                                  child: ListView.builder(
+                                                  itemCount:  snapshot.data != null ? snapshot.data.length : 0,
+                                                  itemBuilder: (_, index) {
+                                                    return Padding(
+                                                        padding: EdgeInsets.only(top:0.0),
+                                                      child: Dismissible(
+                                                      key: Key(UniqueKey().toString()),
+                                                      onDismissed: (direction) async {
+                                                        deletetask(snapshot.data[index].reference.documentID);
+                                                      },
+                                                      child: ListTile(
+                                                        title:
+                                                        Text(snapshot.data[index].data["task_name"]),
+                                                        subtitle: Text("${snapshot.data[index].data["task_details"]} ${snapshot.data[index].data["task_experience".toString()]}" + " Exp"),
+                                                      ),
+                                                      background: Container(
+                                                        alignment: Alignment.centerLeft,
+                                                        padding: EdgeInsets.only(left: 20.0),
+                                                        color: Colors.red,
+                                                        child: Icon(
+                                                          Icons.delete_forever_sharp,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ));
+                                                  })),
+                                          ]
+                                      )
+                                  );
                                 }
                               }),
                         ),
-                      ]
-                  ),
-               ),
             ],
           ),
-          height: double.infinity,
-          width: double.infinity,
           decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('lib/images/child_bg.png'),fit: BoxFit.cover,

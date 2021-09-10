@@ -49,7 +49,8 @@ class _AddChildState extends State<AddChild> {
   }
 
   void navigateToNextScreen() {
-  MaterialPageRoute(builder: (context) => ChildHome());
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ChildHome()));
   }
 
   addChild() async {
@@ -109,19 +110,19 @@ class _AddChildState extends State<AddChild> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
+        body:  Container(
+            height: deviceHeight,
+            width: deviceWidth,
             child: Column(
               children: <Widget>[
                 Container(
-                  height: 50,
+                  height: deviceHeight * 0.1,
                 ),
                 Container(
-                  height: 60,
-                ),
-                Container(
-                  height: 50,
+                  height: deviceHeight * 0.03,
                   child: RichText(
                       text: TextSpan(
                     text: 'ADD A CHILD',
@@ -132,9 +133,10 @@ class _AddChildState extends State<AddChild> {
                   )),
                 ),
                 Container(
-                  height: 30,
+                  height: deviceHeight * 0.05,
                 ),
                 Container(
+                  height: deviceHeight * 0.72,
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -288,6 +290,27 @@ class _AddChildState extends State<AddChild> {
                                     padding: EdgeInsets.only(
                                         left: 10, right: 10, bottom: 10, top: 10),
                                     width: 150.0,
+                                    color: Colors.yellow.withOpacity(0.5),
+                                    child: Container(
+                                        decoration: new BoxDecoration(
+                                          image: new DecorationImage(
+                                            image: ExactAssetImage(
+                                                'lib/images/wisp_8.png'),
+                                            scale: 2,
+                                          ),
+                                        ))),
+                                onTap: () {
+                                  wispName = "wisp_8";
+                                },
+                              ),
+                              Container(
+                                width: 10.0,
+                              ),
+                              InkWell(
+                                child: Container(
+                                    padding: EdgeInsets.only(
+                                        left: 10, right: 10, bottom: 10, top: 10),
+                                    width: 150.0,
                                     color: Colors.orangeAccent.withOpacity(0.5),
                                     child: Container(
                                         decoration: new BoxDecoration(
@@ -379,6 +402,6 @@ class _AddChildState extends State<AddChild> {
               ],
             ),
           ),
-    ));
+    );
   }
 }

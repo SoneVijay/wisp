@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
-
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'childList.dart';
 
 class childrenList extends StatefulWidget {
@@ -13,7 +13,30 @@ class childrenList extends StatefulWidget {
 class _childrenListState extends State<childrenList> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   String user_id, task_userId;
+/*
+  FirebaseMessaging messaging;
+  @override
+  void initState() {
+    super.initState();
+    messaging = FirebaseMessaging();
 
+    messaging.getToken().then((value) {
+      print(value);
+    });
+
+    messaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
+        },
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print("onResume: $message");
+        }
+    );
+  }
+*/
   checkAuthentication() async {
     _auth.onAuthStateChanged.listen((user) async {
       Firestore.instance
@@ -28,6 +51,8 @@ class _childrenListState extends State<childrenList> {
       }
     });
   }
+
+
   Future getChild() async {
     FirebaseUser user = await _auth.currentUser();
     user_id = user.uid;
@@ -52,7 +77,7 @@ class _childrenListState extends State<childrenList> {
                   itemBuilder: (_, index) {
                     return ListTile(
                         leading: Image(
-                          image: AssetImage("lib/images/" + snapshot.data[index].data["wisp"]),
+                          image: AssetImage("lib/images/" + snapshot.data[index].data["wisp"] + '.png'),
                           fit: BoxFit.contain,
                         ),
                         title:

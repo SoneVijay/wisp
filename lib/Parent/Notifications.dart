@@ -19,8 +19,6 @@ class _parentNotificationState extends State<parentNotification> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Text("NOTIFICATION PAGE"),
-
-
                 ],
               )),
         ),
