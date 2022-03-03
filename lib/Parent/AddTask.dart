@@ -11,25 +11,41 @@ class _AddTaskState extends State<AddTask> {
   var selectedChild, user_id;
   FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final taskNameController = TextEditingController();
+  final taskDescriptionController = TextEditingController();
+  final taskExpController = TextEditingController();
   CollectionReference firestore_users = Firestore.instance.collection("user");
   CollectionReference firestore_task = Firestore.instance.collection("TASK");
   String taskName, taskExp, childId, taskDetails;
   DateTime _date = DateTime.now();
+  int queueNumber;
+
+  Future countDocuments(userId) async {
+    QuerySnapshot _myDoc = await Firestore.instance.collection('TASK').where("child_id", isEqualTo: userId).getDocuments();
+    List<DocumentSnapshot> _myDocCount = _myDoc.documents;
+    print(_myDocCount.length);// Count of Documents in Collection
+    return _myDocCount.length+1;
+  }
 
   addTask() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
         if((childId != null || taskName != null) || (taskDetails != null || taskExp != null)) {
-          _buildPopupDialog();
           await firestore_task.document().setData({
             "child_id": childId,
             "task_name": taskName,
             "task_details": taskDetails,
             "task_date": _date,
             "task_experience": taskExp,
+            "task_queueNumber": await countDocuments(childId),
+            "task_status": "in progress",
           });
-
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => _buildPopupDialog(context),
+          );
+          clearText();
         }
       }
       catch (e) {
@@ -39,13 +55,16 @@ class _AddTaskState extends State<AddTask> {
     }
   }
 
-   _buildPopupDialog() {
-    return new AlertDialog(
+  _buildPopupDialog(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Notice!'),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+        CrossAxisAlignment.start,
         children: <Widget>[
-          Text("Task Added!"),
+          Text(
+              "New task was added!"),
         ],
       ),
       actions: <Widget>[
@@ -53,13 +72,35 @@ class _AddTaskState extends State<AddTask> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          textColor: Theme.of(context).primaryColor,
-          child: const Text('Close'),
+          textColor: Color(0xFF0000Ff),
+          child: const Text('Ok'),
         ),
       ],
     );
   }
-
+  _buildPopupDialogError(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Alert!'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment:
+        CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+              "Select a child!"),
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          textColor: Color(0xFF0000Ff),
+          child: const Text('Ok'),
+        ),
+      ],
+    );
+  }
   showError(String errormessage) {
     showDialog(
         context: context,
@@ -90,6 +131,12 @@ class _AddTaskState extends State<AddTask> {
     QuerySnapshot qn =
     await firestore.collection('user').where('parent_id', isEqualTo: user_id).getDocuments();
     return qn.documents;
+  }
+
+  void clearText() {
+    taskNameController.clear();
+    taskDescriptionController.clear();
+    taskExpController.clear();
   }
 
   @override
@@ -174,7 +221,7 @@ class _AddTaskState extends State<AddTask> {
 
                                               ]),
                                           ),
-                                        onTap: (){
+                                        onTap: () {
                                           childId = (snapshot.data[index].documentID);
                                           print(childId);
                                           _onSelected(index);
@@ -193,7 +240,10 @@ class _AddTaskState extends State<AddTask> {
                                 labelText: 'Task Name',
                                 prefixIcon: Icon(Icons.addchart_outlined),
                               ),
-                              onSaved: (input) => taskName = input),
+                              onSaved: (input) => taskName = input,
+                              controller: taskNameController,
+
+                          ),
                         ),
                         Container(
                           child: TextFormField(
@@ -204,7 +254,9 @@ class _AddTaskState extends State<AddTask> {
                                 labelText: 'Task Description',
                                 prefixIcon: Icon(Icons.addchart_outlined),
                               ),
-                              onSaved: (input) => taskDetails = input),
+                              onSaved: (input) => taskDetails = input,
+                            controller: taskDescriptionController,
+                              ),
                         ),
                         Container(
                           child: TextFormField(
@@ -215,7 +267,8 @@ class _AddTaskState extends State<AddTask> {
                                 labelText: 'Experience',
                                 prefixIcon: Icon(Icons.addchart_outlined),
                               ),
-                              onSaved: (input) => taskExp = input),
+                              onSaved: (input) => taskExp = input,
+                            controller: taskExpController,),
                         ),
 
                         Container(
@@ -228,8 +281,16 @@ class _AddTaskState extends State<AddTask> {
                         RaisedButton(
                             padding: EdgeInsets.only(
                                 left: 120, right: 120, bottom: 18, top: 18),
-                            onPressed: (){
-                              addTask();
+                            onPressed: () {
+                              if(childId == null){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => _buildPopupDialogError(context),
+                                );
+                              }
+                              else{
+                                addTask();
+                              }
                             },
                             child: Text(
                               'ADD',

@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +21,6 @@ class _AddChildState extends State<AddChild> {
       parent_id,
       wispName,
       childId;
-
   checkAuthentication() async {
     _auth.onAuthStateChanged.listen((user) async {
       if (user != null) {
@@ -48,6 +46,7 @@ class _AddChildState extends State<AddChild> {
     this.checkAuthentication();
   }
 
+
   void navigateToNextScreen() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ChildHome()));
@@ -67,12 +66,13 @@ class _AddChildState extends State<AddChild> {
             "user_lastName": user_lastName,
             "user_role": "child",
             "parent_id": parent_id,
-            "wisp": wispName
+            "wisp": wispName,
           });
           await firestore_wisp.document(newUser.user.uid).setData({
             "childId": childId,
             "pet_experience": 0,
-            "pet_level": 0,
+            "pet_level": 1,
+            "pet_maxexp": 100,
             "pet_type": wispName
           });
           navigateToNextScreen();
@@ -83,7 +83,10 @@ class _AddChildState extends State<AddChild> {
       }
     }
   }
-
+  int _selectedIndex = 0;
+  _onSelected(int index) {
+    setState(() => _selectedIndex = index);
+  }
   showError(String errormessage) {
     showDialog(
         context: context,
@@ -101,7 +104,6 @@ class _AddChildState extends State<AddChild> {
           );
         });
   }
-
   //navigate
   navigateToNextPage() async {
     Navigator.push(
@@ -113,7 +115,8 @@ class _AddChildState extends State<AddChild> {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        body:  Container(
+        body: SingleChildScrollView(
+        child: Container(
             height: deviceHeight,
             width: deviceWidth,
             child: Column(
@@ -200,7 +203,6 @@ class _AddChildState extends State<AddChild> {
                                 width: 10.0,
                               ),
                               InkWell(
-
                                 child: Container(
                                     padding: EdgeInsets.only(
                                         left: 10, right: 10, bottom: 10, top: 10),
@@ -215,7 +217,6 @@ class _AddChildState extends State<AddChild> {
                                       ),
                                     ))),
                                 onTap: (){
-
                                   wispName = "wisp_6";
                                 },
                               ),
@@ -402,6 +403,7 @@ class _AddChildState extends State<AddChild> {
               ],
             ),
           ),
+    ),
     );
   }
 }

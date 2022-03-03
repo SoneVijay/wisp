@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wisp/Parent/AddChild.dart';
-import 'package:wisp/Parent/Notifications.dart';
 import 'package:wisp/Parent/list.dart';
+import 'package:wisp/Parent/CreditScreen.dart';
 import 'package:wisp/Parent/signout.dart';
 import 'AddTask.dart';
 
@@ -15,7 +15,6 @@ class _ParentMainScreenState extends State<ParentMainScreen> {
   List<Widget> pageList = <Widget>[
     childrenList(),
     AddChild(),
-    parentNotification(),
     AddTask(),
     signOut(),
   ];
@@ -29,7 +28,7 @@ class _ParentMainScreenState extends State<ParentMainScreen> {
           onTap: (value) {
             setState(() {
               pageIndex = value;
-              if (value == 4) {}
+              if (value == 3) {}
             });
             ;
           },
@@ -37,10 +36,8 @@ class _ParentMainScreenState extends State<ParentMainScreen> {
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
             BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add Child"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: "Notifications"),
             BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add Task"),
-            BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Signout"),
+            BottomNavigationBarItem(icon: Icon(Icons.menu), label: "Menu"),
           ],
         ));
   }

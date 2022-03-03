@@ -75,6 +75,7 @@ class _childrenListState extends State<childrenList> {
               return ListView.builder(
                   itemCount:  snapshot.data != null ? snapshot.data.length : 0,
                   itemBuilder: (_, index) {
+
                     return ListTile(
                         leading: Image(
                           image: AssetImage("lib/images/" + snapshot.data[index].data["wisp"] + '.png'),
@@ -83,6 +84,7 @@ class _childrenListState extends State<childrenList> {
                         title:
                         Text(snapshot.data[index].data["user_firstName"]),
                         subtitle: Text("${snapshot.data[index].data["user_email"]}"),
+
                     );
                   });
             }
