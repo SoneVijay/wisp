@@ -15,17 +15,17 @@ Features:
         Experience progression bar for child
         Logout button
 
-#MOTIVATION
+# MOTIVATION
 Due to the rise of the pandemic, adults and especially children are required to stay indoors, adults began working remotely and people have nowhere to go to stroll outdoors safely. With this, children of ages 6-12 years began to be immersed in smartphones and gadgets with excessive screen time with little to no engagement in physical activities. 
 
-#CONTRIBUTORS
+# CONTRIBUTORS
 The following persons are the contributors of the Wisp: An Assistive Application
 Fritz Bryan N. Angulo - Documentation emoji, Content emoji
 Amiel John B. Macahilo- Design emoji
 Kristara C. Mendoza- Documentation emoji, Content emoji
 Vijay Tangub- Code emoji, Documentation emoji, Reviewed pull request emoji
 
-#LICENSE
+# LICENSE
 The virtual pet designs are bought from Freepik which is licensed for commercial use and projects.
 MIT 
  
