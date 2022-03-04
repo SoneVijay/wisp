@@ -1,0 +1,7 @@
+Parent
+Email: vjay.tangub@gmail.com.phh
+Password: vijay19
+
+Child
+Email: vtangub@wvsu.edu.ph
+Password: vijay19
