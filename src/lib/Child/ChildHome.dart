@@ -284,11 +284,6 @@ class _ChildHomeState extends State<ChildHome> {
                                                                 updatedMax = max*2;
                                                                 max = updatedMax;
                                                                 petLevel++;
-                                                                while(max<petExp){
-                                                                  updatedMax = max*2;
-                                                                  max = updatedMax;
-                                                                  petLevel++;
-                                                                }
                                                                 updatePetLevel(petLevel,max ,userId);
                                                                 Navigator.of(context).pop();
                                                               }
