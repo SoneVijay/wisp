@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wisp/Child/childhome.dart';
+import 'package:wisp/Child/childhomeFinal.dart';
 import 'package:wisp/Parent/list.dart';
 import 'package:wisp/Parent/AddChild.dart';
 import 'package:wisp/Parent/ParentMainScreen.dart';

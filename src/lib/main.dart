@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wisp/Child/childhome.dart';
 import 'package:wisp/Parent/list.dart';
 import 'package:wisp/Parent/AddChild.dart';
 import 'package:wisp/Parent/ParentMainScreen.dart';
+import 'Child/childhomeFinal.dart';
 import 'Login.dart';
 import 'SignUp.dart';
 import 'Start.dart';
