@@ -1,4 +1,4 @@
-package com.example.wisp
+package com.cictwvsu.wisp
 
 import io.flutter.embedding.android.FlutterActivity
 
